@@ -6,7 +6,7 @@ license = "MIT"
 description = "Rust SDK for TraceRoot tracing and logging"
 
 [dependencies]
-traceroot_macros = { path = "../traceroot-macros" }
+traceroot_macros = { path = "traceroot-macros" }
 # tracing & logging
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt", "json"] }
