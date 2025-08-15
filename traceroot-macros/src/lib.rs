@@ -4,7 +4,6 @@ use syn::{parse_macro_input, ItemFn, Lit, Meta, MetaNameValue, NestedMeta};
 
 #[proc_macro_attribute]
 pub fn traceroot_trace(args: TokenStream, input: TokenStream) -> TokenStream {
-    // Parse the attribute arguments as a comma-separated list
     let args_parsed = parse_macro_input!(args as syn::AttributeArgs);
 
     let mut span_name = String::from("unnamed");
@@ -12,13 +11,13 @@ pub fn traceroot_trace(args: TokenStream, input: TokenStream) -> TokenStream {
 
     for arg in args_parsed {
         match arg {
-            NestedMeta::Meta(Meta::NameValue(MetaNameValue { path, value, .. })) => {
+            NestedMeta::Meta(Meta::NameValue(MetaNameValue { path, lit, .. })) => {
                 if path.is_ident("span_name") {
-                    if let Lit::Str(s) = value {
+                    if let Lit::Str(s) = lit {
                         span_name = s.value();
                     }
                 } else if path.is_ident("trace_params") {
-                    if let Lit::Bool(b) = value {
+                    if let Lit::Bool(b) = lit {
                         trace_params = b.value;
                     }
                 }
@@ -27,15 +26,13 @@ pub fn traceroot_trace(args: TokenStream, input: TokenStream) -> TokenStream {
         }
     }
 
-    // Parse the function
     let input_fn = parse_macro_input!(input as ItemFn);
     let vis = &input_fn.vis;
     let sig = &input_fn.sig;
     let block = &input_fn.block;
 
     let params_code = if trace_params {
-        // collect params as string
-        quote! { format!("{:?}", (#(&#sig.inputs),*)) }
+        quote! { format!("{:?}", (#sig.inputs,)) }
     } else {
         quote! { String::new() }
     };
