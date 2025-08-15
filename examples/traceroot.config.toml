@@ -1,0 +1,15 @@
+service_name = "rust-example"
+environment = "development"
+
+github_owner = "traceroot-ai"
+github_repo_name = "traceroot-sdk-ts"
+github_commit_hash = "main"
+
+token = "traceroot-****************"
+
+enable_span_console_export = false
+enable_log_console_export = true
+local_mode = false
+
+# if you self-host or need a custom collector:
+# otlp_endpoint = "https://collector.traceroot.ai/v1/traces"
